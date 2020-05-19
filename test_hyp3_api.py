@@ -21,7 +21,6 @@ def batch_stub():
 
 
 def test_submit_job(client, batch_stub):
-    expected_response = {'jobId': 'FAKE_ID_RESPONSE', 'jobName': 'foo'}
     batch_stub.add_response(
         'submit_job',
         expected_params={
@@ -30,12 +29,18 @@ def test_submit_job(client, batch_stub):
             'jobDefinition': environ['JOB_DEFINITION'],
             'parameters': {'granule': 'foo'}
         },
-        service_response=expected_response
+        service_response={'jobId': 'FAKE_ID_RESPONSE', 'jobName': 'foo'}
     )
 
     response = client.post('/jobs', json={'granule': 'foo'})
     assert response.status_code == status.HTTP_200_OK
-    assert response.get_json() == expected_response
+    assert response.get_json() == {
+        'jobId': 'FAKE_ID_RESPONSE',
+        'jobName': 'foo',
+        'parameters': {
+            'granule': 'foo',
+        },
+    }
 
 
 def test_jobs_bad_method(client):

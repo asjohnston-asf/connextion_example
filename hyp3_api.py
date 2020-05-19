@@ -13,8 +13,12 @@ def submit_job(body):
         jobDefinition=environ['JOB_DEFINITION'],
         parameters=body
     )
-    job['parameters'] = body
-    return job
+    response = {
+        'jobId': job['jobId'],
+        'jobName': job['jobName'],
+        'parameters': body,
+    }
+    return response
 
 
 connexion_app = connexion.App(__name__)

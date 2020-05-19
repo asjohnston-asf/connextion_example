@@ -24,21 +24,21 @@ def test_submit_job(client, batch_stub):
     batch_stub.add_response(
         'submit_job',
         expected_params={
-            'jobName': 'foo',
+            'jobName': 'myGranule',
             'jobQueue': environ['JOB_QUEUE'],
             'jobDefinition': environ['JOB_DEFINITION'],
-            'parameters': {'granule': 'foo'}
+            'parameters': {'granule': 'myGranule'}
         },
-        service_response={'jobId': 'FAKE_ID_RESPONSE', 'jobName': 'foo'}
+        service_response={'jobId': 'myJobId', 'jobName': 'myGranule'}
     )
 
-    response = client.post('/jobs', json={'granule': 'foo'})
+    response = client.post('/jobs', json={'granule': 'myGranule'})
     assert response.status_code == status.HTTP_200_OK
     assert response.get_json() == {
-        'jobId': 'FAKE_ID_RESPONSE',
-        'jobName': 'foo',
+        'jobId': 'myJobId',
+        'jobName': 'myGranule',
         'parameters': {
-            'granule': 'foo',
+            'granule': 'myGranule',
         },
     }
 

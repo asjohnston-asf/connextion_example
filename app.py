@@ -1,8 +1,14 @@
 import connexion
 
 
-def submit_job():
-    print('submit_job')
+def submit_job(body):
+    return {
+        'jobId': 'myJobId',
+        'jobName': 'myJobName',
+        'parameters': {
+            'granule': body['granule'],
+        },
+    }
 
 
 app = connexion.App(__name__)

@@ -24,28 +24,42 @@ def test_submit_job(client, batch_stub):
     batch_stub.add_response(
         method='submit_job',
         expected_params={
-            'jobName': 'myGranule',
+            'jobName': 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9',
             'jobQueue': environ['JOB_QUEUE'],
             'jobDefinition': environ['JOB_DEFINITION'],
             'parameters': {
-                'granule': 'myGranule',
+                'granule': 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9',
             },
         },
         service_response={
             'jobId': 'myJobId',
-            'jobName': 'myGranule',
+            'jobName': 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9',
         },
     )
 
-    response = client.post('/jobs', json={'granule': 'myGranule'})
+    response = client.post('/jobs', json={'granule': 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9'})
     assert response.status_code == status.HTTP_200_OK
     assert response.get_json() == {
         'jobId': 'myJobId',
-        'jobName': 'myGranule',
+        'jobName': 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9',
         'parameters': {
-            'granule': 'myGranule',
+            'granule': 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9',
         },
     }
+
+
+def test_bad_granule_names(client):
+    response = client.post('/jobs', json={'granule': 'foo'})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    response = client.post('/jobs', json={'granule': 'S1B_IW_OCN__2SDV_20200518T220815_20200518T220851_021642_02915F_B404'})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    response = client.post('/jobs', json={'granule': 'S1B_S3_RAW__0SSV_20200518T185451_20200518T185522_021640_029151_BFBF'})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    response = client.post('/jobs', json={'granule': 'S1A_S3_GRDH_1SDV_20200516T173131_20200516T173140_032593_03C66A_F005'})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
 def test_jobs_bad_method(client):

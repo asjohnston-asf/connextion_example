@@ -40,6 +40,9 @@ components:
       properties:
         granule:
           type: string
+          pattern: "^S1[AB]_(IW|EW)_(GRD[MH]|SLC_)_*"
+          minLength: 67
+          maxLength: 67
       required:
         - granule
       additionalProperties: false

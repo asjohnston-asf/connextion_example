@@ -4,10 +4,8 @@ import connexion
 def submit_job(body):
     return {
         'jobId': 'myJobId',
-        'jobName': 'myJobName',
-        'parameters': {
-            'granule': body['granule'],
-        },
+        'jobName': body['granule'],
+        'parameters': body,
     }
 
 

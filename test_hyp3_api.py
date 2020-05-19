@@ -20,23 +20,26 @@ def batch_stub():
         stubber.assert_no_pending_responses()
 
 
-def test_submit_job(client, batch_stub):
+def stub_response(batch_stub, granule):
     batch_stub.add_response(
         method='submit_job',
         expected_params={
-            'jobName': 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9',
+            'jobName': granule,
             'jobQueue': environ['JOB_QUEUE'],
             'jobDefinition': environ['JOB_DEFINITION'],
             'parameters': {
-                'granule': 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9',
+                'granule': granule,
             },
         },
         service_response={
             'jobId': 'myJobId',
-            'jobName': 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9',
+            'jobName': granule,
         },
     )
 
+
+def test_submit_job(client, batch_stub):
+    stub_response(batch_stub, 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9')
     response = client.post('/jobs', json={'granule': 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9'})
     assert response.status_code == status.HTTP_200_OK
     assert response.get_json() == {
@@ -48,7 +51,7 @@ def test_submit_job(client, batch_stub):
     }
 
 
-def test_bad_granule_names(client):
+def test_granule_names(client, batch_stub):
     response = client.post('/jobs', json={'granule': 'foo'})
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -60,6 +63,18 @@ def test_bad_granule_names(client):
 
     response = client.post('/jobs', json={'granule': 'S1A_S3_GRDH_1SDV_20200516T173131_20200516T173140_032593_03C66A_F005'})
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    stub_response(batch_stub, 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9')
+    response = client.post('/jobs', json={'granule': 'S1B_IW_GRDH_1SDV_20200518T220541_20200518T220610_021641_02915F_82D9'})
+    assert response.status_code == status.HTTP_200_OK
+
+    stub_response(batch_stub, 'S1A_EW_GRDM_1SDH_20200518T172837_20200518T172941_032622_03C745_422A')
+    response = client.post('/jobs', json={'granule': 'S1A_EW_GRDM_1SDH_20200518T172837_20200518T172941_032622_03C745_422A'})
+    assert response.status_code == status.HTTP_200_OK
+
+    stub_response(batch_stub, 'S1A_IW_SLC__1SSH_20200518T142852_20200518T142919_032620_03C734_E5EE')
+    response = client.post('/jobs', json={'granule': 'S1A_IW_SLC__1SSH_20200518T142852_20200518T142919_032620_03C734_E5EE'})
+    assert response.status_code == status.HTTP_200_OK
 
 
 def test_jobs_bad_method(client):

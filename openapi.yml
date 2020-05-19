@@ -47,3 +47,4 @@ components:
       properties:
         granule:
           type: string
+      additionalProperties: false

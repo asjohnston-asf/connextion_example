@@ -22,14 +22,19 @@ def batch_stub():
 
 def test_submit_job(client, batch_stub):
     batch_stub.add_response(
-        'submit_job',
+        method='submit_job',
         expected_params={
             'jobName': 'myGranule',
             'jobQueue': environ['JOB_QUEUE'],
             'jobDefinition': environ['JOB_DEFINITION'],
-            'parameters': {'granule': 'myGranule'}
+            'parameters': {
+                'granule': 'myGranule',
+            },
         },
-        service_response={'jobId': 'myJobId', 'jobName': 'myGranule'}
+        service_response={
+            'jobId': 'myJobId',
+            'jobName': 'myGranule',
+        },
     )
 
     response = client.post('/jobs', json={'granule': 'myGranule'})

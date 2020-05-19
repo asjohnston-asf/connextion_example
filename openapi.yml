@@ -2,15 +2,10 @@ openapi: 3.0.1
 info:
   title: hyp3-api
   version: 0.0.1
-servers:
-  - url: https://hyp3-develop-api.asf.alaska.edu/{basePath}
-    variables:
-      basePath:
-        default: /v1
 paths:
   /jobs:
     post:
-      operationId: app.submit_job
+      operationId: hyp3_api.submit_job
       requestBody:
         content:
           application/json:

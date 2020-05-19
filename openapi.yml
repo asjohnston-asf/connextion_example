@@ -15,7 +15,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/submitJob"
+              $ref: "#/components/schemas/parameters"
         required: true
       responses:
         "200":
@@ -23,18 +23,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Empty"
+                $ref: "#/components/schemas/job"
 components:
   schemas:
-    Empty:
-      title: Empty Schema
+    job:
+      required:
+        - jobId
+        - jobName
+        - parameters
       type: object
-    submitJob:
-      title: JobInputModel
+      properties:
+        jobId:
+          type: string
+        jobName:
+          type: string
+        parameters:
+          $ref: "#/components/schemas/parameters"
+      additionalProperties: false
+    parameters:
+      type: object
       required:
         - granule
-      type: object
       properties:
         granule:
           type: string
-      additionalProperties: false
